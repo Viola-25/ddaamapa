@@ -3,38 +3,38 @@ library(ggplot2)
 
 # Declarar o dataframe 'data' e suas colunas com os valores fornecidos
 data <- data.frame(
-  Municipio = c("Amapa", "Tartarugalzinho", "Santana", "Porto Grande", "Laranjal do Jari", 
+  Municipio = c("Amapa", "Ferreira Gomes", "Tartarugalzinho", "Santana", "Porto Grande", "Laranjal do Jari", 
                 "Pedra Branca do Amapari", "Calcoene", "Mazagao", "Serra do Navio", "Cutias", 
                 "Oiapoque", "Itaubal", "Macapa", "Vitoria do Jari", "Pracuuba"),
-  Incidencia_de_Doencas_Diarreicas_Agudas = c(33.72, 28.95, 27.87, 25.25, 23.1, 
+  Incidencia_de_Doencas_Diarreicas_Agudas = c(33.72, 29.56, 28.95, 27.87, 25.25, 23.1, 
                                               22.12, 21.99, 18.73, 17.58, 16.9, 
                                               16.35, 14.72, 9.22, 7.02, 3.59),
-  Acesso_a_agua_potavel = c(6.51, 87.18, 14.49, 10.38, 0.43, 
-                            96.74, 1.12, 6.51, 5.63, 13.89, 
-                            11.54, 11.54, 3.49, 2.31, 0.0),
-  Coleta_de_esgoto = c(41.86, 65.87, 68.75, 43.75, 0.43, 
-                       93.0, 50.75, 46.88, 46.88, 42.86, 
-                       43.75, 37.5, 31.25, 25.0, 87.5),
-  Coleta_de_lixo = c(15.19, 42.86, 24.68, 21.05, 3.92, 
-                     37.5, 36.21, 29.76, 31.25, 37.5, 
-                     34.38, 29.76, 12.5, 17.39, 66.67)
+  populacao_sem_agua = c(76.23, 71.45, 87.18, 58.16, 97, 70.56, 
+                         96.74, 87.64, 84.91, 66.52, 55.70, 
+                         93.25, 72.29, 63.40, 55.34, 79.22),
+  populacao_sem_esgoto = c(95.50, NA, NA, 98.87, NA, 
+                           NA, NA, NA, 98.57, 67.28, 
+                           NA, 99, NA, 89.45, NA, NA),
+  populacao_sem_lixo = c(0, 14.12, 34.13, 7.02, 35.70, 
+                         0, 30.00, 38.74, 51.43, 28.28, 
+                         10.46, 32.46, 58.88, 0, 17.93, NA)
 )
 
 # Scatter plots para visualizar correlações
-plot1 <- ggplot(data, aes(x = Acesso_a_agua_potavel, y = Incidencia_de_Doencas_Diarreicas_Agudas)) +
+plot1 <- ggplot(data, aes(x = populacao_sem_agua, y = Incidencia_de_Doencas_Diarreicas_Agudas)) +
   geom_point() +
   geom_smooth(method = 'lm', col = 'blue') +
-  ggtitle('Incidencia de Doencas Diarreicas Agudas vs Acesso a agua potavel')
+  ggtitle('Incidencia de Doencas Diarreicas Agudas vs Pop sem Água')
 
-plot2 <- ggplot(data, aes(x = Coleta_de_esgoto, y = Incidencia_de_Doencas_Diarreicas_Agudas)) +
-  geom_point() +
-  geom_smooth(method = 'lm', col = 'blue') +
-  ggtitle('Incidencia de Doencas Diarreicas Agudas vs Coleta de esgoto')
+plot2 <- ggplot(data, aes(x = populacao_sem_esgoto, y = Incidencia_de_Doencas_Diarreicas_Agudas)) +
+  geom_point(na.rm = TRUE) +
+  geom_smooth(method = 'lm', col = 'blue', na.rm = TRUE) +
+  ggtitle('Incidencia de Doencas Diarreicas Agudas vs Pop sem Esgoto')
 
-plot3 <- ggplot(data, aes(x = Coleta_de_lixo, y = Incidencia_de_Doencas_Diarreicas_Agudas)) +
+plot3 <- ggplot(data, aes(x = populacao_sem_lixo, y = Incidencia_de_Doencas_Diarreicas_Agudas)) +
   geom_point() +
   geom_smooth(method = 'lm', col = 'blue') +
-  ggtitle('Incidencia de Doencas Diarreicas Agudas vs Coleta de lixo')
+  ggtitle('Incidencia de Doencas Diarreicas Agudas vs Pop sem Lixo')
 
 # Imprimir plots
 print(plot1)
@@ -42,39 +42,39 @@ print(plot2)
 print(plot3)
 
 # Verificar correlação entre as variáveis
-correlation1 <- cor(data$Acesso_a_agua_potavel, data$Incidencia_de_Doencas_Diarreicas_Agudas)
-correlation2 <- cor(data$Coleta_de_esgoto, data$Incidencia_de_Doencas_Diarreicas_Agudas)
-correlation3 <- cor(data$Coleta_de_lixo, data$Incidencia_de_Doencas_Diarreicas_Agudas)
+correlation1 <- cor(data$populacao_sem_agua, data$Incidencia_de_Doencas_Diarreicas_Agudas)
+correlation2 <- cor(data$populacao_sem_esgoto, data$Incidencia_de_Doencas_Diarreicas_Agudas, use = "complete.obs")
+correlation3 <- cor(data$populacao_sem_lixo, data$Incidencia_de_Doencas_Diarreicas_Agudas)
 
-cat("Correlação entre Acesso a água potável e Incidência de Doenças Diarreicas Agudas:", correlation1, "\n")
-cat("Correlação entre Coleta de esgoto e Incidência de Doenças Diarreicas Agudas:", correlation2, "\n")
-cat("Correlação entre Coleta de lixo e Incidência de Doenças Diarreicas Agudas:", correlation3, "\n")
+cat("Correlação entre Pop sem Água e Incidência de Doenças Diarreicas Agudas:", correlation1, "\n")
+cat("Correlação entre Pop sem Esgoto e Incidência de Doenças Diarreicas Agudas:", correlation2, "\n")
+cat("Correlação entre Pop sem Lixo e Incidência de Doenças Diarreicas Agudas:", correlation3, "\n")
 
 # Realizo o teste t
-t_test1 <- t.test(data$Acesso_a_agua_potavel, data$Incidencia_de_Doencas_Diarreicas_Agudas)
-t_test2 <- t.test(data$Coleta_de_esgoto, data$Incidencia_de_Doencas_Diarreicas_Agudas)
-t_test3 <- t.test(data$Coleta_de_lixo, data$Incidencia_de_Doencas_Diarreicas_Agudas)
+t_test1 <- t.test(data$populacao_sem_agua, data$Incidencia_de_Doencas_Diarreicas_Agudas)
+t_test2 <- t.test(data$populacao_sem_esgoto, data$Incidencia_de_Doencas_Diarreicas_Agudas, na.rm = TRUE)
+t_test3 <- t.test(data$populacao_sem_lixo, data$Incidencia_de_Doencas_Diarreicas_Agudas)
 
 # Imprimo resultados dos testes t
-cat("\nTeste t entre Acesso a água potável e Incidência de Doenças Diarreicas Agudas:\n")
+cat("\nTeste t entre Pop sem Água e Incidência de Doenças Diarreicas Agudas:\n")
 print(t_test1)
-cat("\nTeste t entre Coleta de esgoto e Incidência de Doenças Diarreicas Agudas:\n")
+cat("\nTeste t entre Pop sem Esgoto e Incidência de Doenças Diarreicas Agudas:\n")
 print(t_test2)
-cat("\nTeste t entre Coleta de lixo e Incidência de Doenças Diarreicas Agudas:\n")
+cat("\nTeste t entre Pop sem Lixo e Incidência de Doenças Diarreicas Agudas:\n")
 print(t_test3)
 
 # Verifica se e normal
-s_test1 <- shapiro.test(data$Acesso_a_agua_potavel)
-s_test2 <- shapiro.test(data$Coleta_de_esgoto)
-s_test3 <- shapiro.test(data$Coleta_de_lixo)
+s_test1 <- shapiro.test(data$populacao_sem_agua)
+s_test2 <- shapiro.test(data$populacao_sem_esgoto[!is.na(data$populacao_sem_esgoto)])
+s_test3 <- shapiro.test(data$populacao_sem_lixo)
 s_test4 <- shapiro.test(data$Incidencia_de_Doencas_Diarreicas_Agudas)
 
 # Imprimir resultados dos testes para verificar se esta em distribuicao normal
-cat("\nTeste S entre Acesso a água potável:\n")
+cat("\nTeste S entre Pop sem Água:\n")
 print(s_test1)
-cat("\nTeste S entre Coleta de esgoto:\n")
+cat("\nTeste S entre Pop sem Esgoto:\n")
 print(s_test2)
-cat("\nTeste S entre Coleta de lixo:\n")
+cat("\nTeste S entre Pop sem Lixo:\n")
 print(s_test3)
 cat("\nTeste S entre Incidencia:\n")
 print(s_test4)
